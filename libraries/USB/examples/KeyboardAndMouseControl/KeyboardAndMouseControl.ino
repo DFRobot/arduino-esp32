@@ -18,12 +18,13 @@
 
   http://www.arduino.cc/en/Tutorial/KeyboardAndMouseControl
 */
+#include <Arduino.h>
 #ifndef ARDUINO_USB_MODE
 #error This ESP32 SoC has no Native USB interface
 #elif ARDUINO_USB_MODE == 1
 #warning This sketch should be used when USB is in OTG mode
-void setup(){}
-void loop(){}
+void setup() {}
+void loop() {}
 #else
 
 #include "USB.h"
@@ -39,7 +40,7 @@ const int leftButton = 14;
 const int rightButton = 15;
 const int mouseButton = 0;
 
-void setup() { // initialize the buttons' inputs:
+void setup() {  // initialize the buttons' inputs:
   pinMode(upButton, INPUT_PULLUP);
   pinMode(downButton, INPUT_PULLUP);
   pinMode(leftButton, INPUT_PULLUP);

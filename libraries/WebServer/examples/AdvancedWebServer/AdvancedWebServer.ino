@@ -28,8 +28,9 @@
    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include <Arduino.h>
 #include <WiFi.h>
-#include <WiFiClient.h>
+#include <NetworkClient.h>
 #include <WebServer.h>
 #include <ESPmDNS.h>
 
@@ -44,12 +45,14 @@ void handleRoot() {
   digitalWrite(led, 1);
   char temp[400];
   int sec = millis() / 1000;
-  int min = sec / 60;
-  int hr = min / 60;
+  int hr = sec / 3600;
+  int min = (sec / 60) % 60;
+  sec = sec % 60;
 
-  snprintf(temp, 400,
+  snprintf(
+    temp, 400,
 
-           "<html>\
+    "<html>\
   <head>\
     <meta http-equiv='refresh' content='5'/>\
     <title>ESP32 Demo</title>\
@@ -64,8 +67,8 @@ void handleRoot() {
   </body>\
 </html>",
 
-           hr, min % 60, sec % 60
-          );
+    hr, min, sec
+  );
   server.send(200, "text/html", temp);
   digitalWrite(led, 0);
 }
@@ -81,7 +84,7 @@ void handleNotFound() {
   message += server.args();
   message += "\n";
 
-  for (uint8_t i = 0; i < server.args(); i++) {
+  for (int i = 0; i < server.args(); i++) {
     message += " " + server.argName(i) + ": " + server.arg(i) + "\n";
   }
 
@@ -125,7 +128,7 @@ void setup(void) {
 
 void loop(void) {
   server.handleClient();
-  delay(2);//allow the cpu to switch to other tasks
+  delay(2);  //allow the cpu to switch to other tasks
 }
 
 void drawGraph() {

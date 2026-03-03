@@ -3,8 +3,10 @@
 
 #include <stdint.h>
 
+#define F_XTAL_MHZ 26  //SparkFun ESP32 Thing has 26MHz Crystal
+
 static const uint8_t LED_BUILTIN = 5;
-#define BUILTIN_LED  LED_BUILTIN // backward compatibility
+#define BUILTIN_LED LED_BUILTIN  // backward compatibility
 #define LED_BUILTIN LED_BUILTIN  // allow testing #ifdef LED_BUILTIN
 
 static const uint8_t KEY_BUILTIN = 0;
@@ -15,10 +17,10 @@ static const uint8_t RX = 3;
 static const uint8_t SDA = 21;
 static const uint8_t SCL = 22;
 
-static const uint8_t SS    = 2;
-static const uint8_t MOSI  = 23;
-static const uint8_t MISO  = 19;
-static const uint8_t SCK   = 18;
+static const uint8_t SS = 2;
+static const uint8_t MOSI = 23;
+static const uint8_t MISO = 19;
+static const uint8_t SCK = 18;
 
 static const uint8_t A0 = 36;
 static const uint8_t A3 = 39;

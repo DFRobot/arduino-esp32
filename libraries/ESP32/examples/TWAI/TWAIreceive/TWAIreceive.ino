@@ -24,6 +24,8 @@
   created 05-11-2022 by Stephan Martin (designer2k2)
 */
 
+#include <Arduino.h>
+
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 #include "driver/twai.h"
 
@@ -31,7 +33,7 @@
 #define RX_PIN 21
 #define TX_PIN 22
 
-// Intervall:
+// Interval:
 #define POLLING_RATE_MS 1000
 
 static bool driver_installed = false;
@@ -74,7 +76,7 @@ void setup() {
   driver_installed = true;
 }
 
-static void handle_rx_message(twai_message_t& message) {
+static void handle_rx_message(twai_message_t &message) {
   // Process received message
   if (message.extd) {
     Serial.println("Message is in Extended Format");

@@ -6,10 +6,11 @@
   software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
   CONDITIONS OF ANY KIND, either express or implied.
 */
+#include <Arduino.h>
 #include "WiFi.h"
 // Change the SSID and PASSWORD here if needed
-const char * WIFI_FTM_SSID = "WiFi_FTM_Responder";
-const char * WIFI_FTM_PASS = "ftm_responder";
+const char *WIFI_FTM_SSID = "WiFi_FTM_Responder";
+const char *WIFI_FTM_PASS = "ftm_responder";
 
 void setup() {
   Serial.begin(115200);

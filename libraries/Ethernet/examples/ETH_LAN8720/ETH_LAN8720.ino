@@ -5,31 +5,41 @@
 
 // Important to be defined BEFORE including ETH.h for ETH.begin() to work.
 // Example RMII LAN8720 (Olimex, etc.)
-#define ETH_PHY_TYPE        ETH_PHY_LAN8720
-#define ETH_PHY_ADDR         0
-#define ETH_PHY_MDC         23
-#define ETH_PHY_MDIO        18
-#define ETH_PHY_POWER       -1
-#define ETH_CLK_MODE        ETH_CLOCK_GPIO0_IN
+#include <Arduino.h>
+#ifndef ETH_PHY_MDC
+#define ETH_PHY_TYPE ETH_PHY_LAN8720
+#if CONFIG_IDF_TARGET_ESP32
+#define ETH_PHY_ADDR  0
+#define ETH_PHY_MDC   23
+#define ETH_PHY_MDIO  18
+#define ETH_PHY_POWER -1
+#define ETH_CLK_MODE  ETH_CLOCK_GPIO0_IN
+#elif CONFIG_IDF_TARGET_ESP32P4
+#define ETH_PHY_ADDR  0
+#define ETH_PHY_MDC   31
+#define ETH_PHY_MDIO  52
+#define ETH_PHY_POWER 51
+#define ETH_CLK_MODE  EMAC_CLK_EXT_IN
+#endif
+#endif
 
 #include <ETH.h>
 
 static bool eth_connected = false;
 
-void onEvent(arduino_event_id_t event, arduino_event_info_t info)
-{
+// WARNING: onEvent is called from a separate FreeRTOS task (thread)!
+void onEvent(arduino_event_id_t event) {
   switch (event) {
     case ARDUINO_EVENT_ETH_START:
       Serial.println("ETH Started");
-      //set eth hostname here
+      // The hostname must be set after the interface is started, but needs
+      // to be set before DHCP, so set it from the event handler thread.
       ETH.setHostname("esp32-ethernet");
       break;
-    case ARDUINO_EVENT_ETH_CONNECTED:
-      Serial.println("ETH Connected");
-      break;
+    case ARDUINO_EVENT_ETH_CONNECTED: Serial.println("ETH Connected"); break;
     case ARDUINO_EVENT_ETH_GOT_IP:
       Serial.println("ETH Got IP");
-      ETH.printInfo(Serial);
+      Serial.println(ETH);
       eth_connected = true;
       break;
     case ARDUINO_EVENT_ETH_LOST_IP:
@@ -44,17 +54,15 @@ void onEvent(arduino_event_id_t event, arduino_event_info_t info)
       Serial.println("ETH Stopped");
       eth_connected = false;
       break;
-    default:
-      break;
+    default: break;
   }
 }
 
-void testClient(const char * host, uint16_t port)
-{
+void testClient(const char *host, uint16_t port) {
   Serial.print("\nconnecting to ");
   Serial.println(host);
 
-  WiFiClient client;
+  NetworkClient client;
   if (!client.connect(host, port)) {
     Serial.println("connection failed");
     return;
@@ -69,16 +77,13 @@ void testClient(const char * host, uint16_t port)
   client.stop();
 }
 
-void setup()
-{
+void setup() {
   Serial.begin(115200);
-  WiFi.onEvent(onEvent);
+  Network.onEvent(onEvent);
   ETH.begin();
 }
 
-
-void loop()
-{
+void loop() {
   if (eth_connected) {
     testClient("google.com", 80);
   }

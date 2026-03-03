@@ -10,13 +10,14 @@
   created 27-06-2023 by Stephan Martin (designer2k2)
 */
 
+#include <Arduino.h>
 #include "driver/twai.h"
 
 // Pins used to connect to CAN bus transceiver:
 #define RX_PIN 21
 #define TX_PIN 22
 
-// Intervall:
+// Interval:
 #define TRANSMIT_RATE_MS 1000
 
 #define POLLING_RATE_MS 1000
@@ -24,7 +25,6 @@
 static bool driver_installed = false;
 
 unsigned long previousMillis = 0;  // will store last time a message was send
-
 
 void setup() {
   // Start Serial:
